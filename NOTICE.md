@@ -1,6 +1,6 @@
 # NOTICE
 
-This kit is derived from Salesforce AI Research's CRMArena-Pro evaluation code
+This repository is derived from Salesforce AI Research's CRMArena-Pro evaluation code
 (https://github.com/SalesforceAIResearch/CRMArena), released under the Creative Commons
 Attribution-NonCommercial 4.0 International licence (CC BY-NC 4.0). The full licence text is in `LICENSE.txt`.
 

@@ -1,6 +1,34 @@
-# Research kit: architecture router (CRMArena-Pro B2C)
-Contents: router refit code (`router_dist.py`, `router.py`, `oracle.py`, `normalize_score.py`, `task_tiers.py`, `structured_score.py`), the 24 cached DAGs (`decomposition/cache/`), the 216 per-run results (`results/{custom_baseline,workflow,multi_agent}/`), the method spec and report (`results/router_dist/`), the experiment pipeline (`decomposition/`, `architectures/`, `run_*.py`, `custom_tasks.py`, `crm_sandbox/`) and the prototype data builders (`prototype/tools/`).
-Refit (offline, numpy only, no key or .env; verified with Python 3.12.10): from this folder run `python3 router_dist.py`. Outputs go to `results/router_dist/` (it overwrites `report.txt`, so copy it aside first). Check: on the shipped data the new `report.txt` is byte-identical to the shipped copy (`cmp`). Do not rely on the sha256 of `bucket_model.json`: on other machines some floating-point values can differ in the last digit (about 1e-15), so the hash may not match. For reference, with Python 3.12.10 and numpy 2.3.0 it is `90066740b062f0fc9566ce3ee98d78fcc2a0cb4cb1b424890f038f5eb9215d38`.
-New experiments need `pip install -r requirements.txt` plus `datasets`, an LLM API key and a CRMArena-Pro Salesforce sandbox login in `.env` (variable names in `.env.example`).
-Retraining on new tasks: see RETRAIN.md. Project handover: HANDOVER.md. The prototype app is at https://github.com/sethlovesai/llm-agent-architecture-router (branch `clean-submission`).
-Licence: CC BY-NC 4.0, non-commercial use only; see NOTICE.md and LICENSE.txt.
+# Research repo: architecture router (CRMArena-Pro B2C)
+
+## What this is
+Everything needed to refit the bucket-based Beta router that recommends single-agent, workflow or multi-agent for a CRM task: refit code, 24 cached DAGs (`decomposition/cache/`), 216 per-run results (`results/`), the pre-registered spec and report (`results/router_dist/`) and the experiment pipeline. The app lives in a separate repo (below).
+
+## Quick start: refit (offline, numpy only, no key or `.env`)
+```
+cp results/router_dist/report.txt /tmp/report_shipped.txt
+python3 router_dist.py
+cmp /tmp/report_shipped.txt results/router_dist/report.txt
+```
+On unchanged data `report.txt` is byte-identical: that is the check. [verified by running] For reference only, with Python 3.12.10 and numpy 2.3.0 `bucket_model.json` has sha256 `90066740b062f0fc9566ce3ee98d78fcc2a0cb4cb1b424890f038f5eb9215d38`; elsewhere some floats can differ in the last digit and the hash will not match.
+
+## Python version
+Use Python 3.12 for new experiments: several pinned packages (numpy 2.0.1, pandas 2.2.2, lxml 5.2.2, jiter 0.5.0) have no prebuilt wheels on 3.13, so installs may fail; a source build might still work. [checked with pip download --only-binary on 3.13; not a full install] The refit alone needs only numpy (any recent version). [verified by running]
+
+## New experiments [not run]
+`pip install -r requirements.txt datasets`, an LLM API key and your own CRMArena-Pro Salesforce sandbox login in `.env` (variable names in `.env.example`). See RETRAIN.md.
+
+## Predict on new tasks
+Needs the app repo: `git clone -b clean-submission https://github.com/sethlovesai/llm-agent-architecture-router` (installs: see its `requirements.txt`). From its root:
+```python
+import live_decompose as ld, router_adapter as ra
+model = ra.FrozenModel()   # or ra.FrozenModel("path/to/refit/results/router_dist/bucket_model.json")
+g = ld.generate(text)      # LLM call, needs OPENAI_API_KEY; g.width
+rec = ra.recommend(model, g.width, lam=100)   # lam in {0, 10, 100, 300}; rec["pick"], rec["P_best"], rec["no_clear_winner"], rec["flag"]
+```
+`FrozenModel` and `recommend` [verified by running]; `ld.generate` [not run].
+
+## Where to start
+HANDOVER.md, then RETRAIN.md.
+
+## Licence
+CC BY-NC 4.0, non-commercial use only; see NOTICE.md and LICENSE.txt.
