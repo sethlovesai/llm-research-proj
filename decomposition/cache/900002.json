@@ -1,0 +1,44 @@
+{
+  "task_id": 900002,
+  "query": "Which accounts currently have both at least one unresolved support case and at least one order in the last 90 days? For each matching account, return the unresolved case count and most recent order date/status.",
+  "category": "dual_signal_account_flagging",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve, for each account with at least one unresolved Case (ClosedDate is null), the AccountId and its unresolved case count.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Retrieve, for each account with at least one Order in the last 90 days, the AccountId and that account's most recent order date and status.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "3",
+      "description": "Determine which AccountIds appear in both Subtask 1 and Subtask 2's results, and for each matching account, combine its unresolved case count with its most recent order date/status.",
+      "depends_on": [
+        "1",
+        "2"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "4",
+      "description": "Format the final response listing each matching account with its unresolved case count and most recent order date/status.",
+      "depends_on": [
+        "3"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 2,
+    "critical_path_depth": 3,
+    "coupling_density": 0.5
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

@@ -1,0 +1,37 @@
+{
+  "task_id": 421,
+  "query": "In the last month, which subtopic in all sales discussions shows the most negative sentiment when evaluating our solutions?",
+  "category": "sales_insight_mining",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve sales discussion records from the last month, including sentiment analysis data on subtopics discussed.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Analyze the sentiment data to identify the subtopic with the most negative sentiment.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Format the final answer with the identified subtopic and its sentiment score.",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 3,
+    "coupling_density": 0.6667
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

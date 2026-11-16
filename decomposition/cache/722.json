@@ -1,0 +1,17 @@
+{
+  "task_id": 722,
+  "query": "What is the purpose of the Summer Road Trip Service?",
+  "category": "knowledge_qa",
+  "decomposition_warranted": false,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Search knowledge base for the purpose of the Summer Road Trip Service and respond.",
+      "depends_on": [],
+      "role": "Retriever"
+    }
+  ],
+  "features": null,
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

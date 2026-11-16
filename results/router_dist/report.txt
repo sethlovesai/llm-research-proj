@@ -1,0 +1,490 @@
+================================================================================================================================
+router_dist: BUCKET-BASED SOFT-COUNT BETA ROUTER  (pre-registered in results/router_dist/SPEC.md)
+================================================================================================================================
+Model: posterior Beta(1+s, 1+n-s) per bucket x architecture; evidence unit = one category's mean quality (a fractional 'soft count').
+THIS IS A SOFT-COUNT BETA UPDATE, NOT AN EXACT BETA-BINOMIAL LIKELIHOOD (quality is fractional F1/structured, not Bernoulli outcomes).
+Probabilities/P(best) describe uncertainty relative to this benchmark's bucket evidence, not calibrated success probabilities for arbitrary CRM tasks.
+Scored (informative) tasks: [36, 89, 722, 1030, 1089, 1624, 1654, 1914, 1936, 900001, 900002]
+Regret-excluded all-zero quality ties (listed, not scored): [122, 125, 334, 348, 421, 446, 672, 792, 1463, 1563, 1857, 1942, 2056]
+Metric: structured (headline). Cost: category-mean cost, bucket mean of those. Utility U = mu - lambda * c_hat.
+Headline = bucket definition 'width only', leave-one-category-out. Regrets show the TIE-AVERAGED figure first, deterministic in parentheses.
+
+################################################################################################################################
+1. HEADLINE: width-only buckets, LEAVE-ONE-CATEGORY-OUT
+################################################################################################################################
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.514 (0.453)                 2                          2/11       0.7            MA 0.255    0.320/0.406/0.255  +0.259 (+0.198)                     [+0.167, +0.517] ([+0.039, +0.513])  -101% (-78%)                     
+  10      0.520 (0.454)                 2                          3/11       1.7            MA 0.265    0.318/0.418/0.265  +0.255 (+0.189)                     [+0.176, +0.513] ([+0.040, +0.510])  -96% (-71%)                      
+  100     0.610 (0.496)                 2                          2/11       0.7            SA 0.319    0.319/0.542/0.366  +0.290 (+0.177)                     [+0.243, +0.563] ([+0.054, +0.528])  -91% (-55%)                      
+  300     0.490 (0.271)                 2                          6/11       4.7            SA 0.321    0.321/0.815/0.592  +0.169 (-0.050)                     [-0.101, +0.813] ([-0.318, +0.467])  -53% (+16%)                      
+
+   LEAVE-ONE-TASK-OUT, width-only (OPTIMISTIC: same-category twins stay in training)
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.392 (0.392)                 0                          3/11       3.0            MA 0.255    0.320/0.406/0.255  +0.137 (+0.137)                     [+0.002, +0.424] ([+0.002, +0.424])  -54% (-54%)                      
+  10      0.393 (0.393)                 0                          4/11       4.0            MA 0.265    0.318/0.418/0.265  +0.128 (+0.128)                     [+0.000, +0.423] ([+0.000, +0.423])  -48% (-48%)                      
+  100     0.358 (0.358)                 0                          4/11       4.0            SA 0.319    0.319/0.542/0.366  +0.039 (+0.039)                     [-0.132, +0.414] ([-0.132, +0.414])  -12% (-12%)                      
+  300     0.271 (0.271)                 0                          6/11       6.0            SA 0.321    0.321/0.815/0.592  -0.050 (-0.050)                     [-0.318, +0.467] ([-0.318, +0.467])  +16% (+16%)                      
+
+   BASELINE regrets (mean over the 11 scored tasks) per lambda:
+  lambda  always SA  always WF  always MA  best fixed
+  ------  ---------  ---------  ---------  ----------
+  0       0.320      0.406      0.255      MA 0.255  
+  10      0.318      0.418      0.265      MA 0.265  
+  100     0.319      0.542      0.366      SA 0.319  
+  300     0.321      0.815      0.592      SA 0.321  
+
+   PER-TASK TABLE (headline, LOCO) at each lambda: posterior mean +/- SD and expected cost per architecture
+
+   lambda = 0
+  task    category                    w  d  bucket  n_cat  SA mu±sd $         WF mu±sd $         MA mu±sd $         pick  P(best)  95% CI gap U(sel)-U(best other)  evidence                            oracle 
+  ------  --------------------------  -  -  ------  -----  -----------------  -----------------  -----------------  ----  -------  -------------------------------  ----------------------------------  -------
+  36      lead_qualification          4  3  (w4)    0      0.50±0.29 $0.0022  0.50±0.29 $0.0022  0.50±0.29 $0.0022  SA    0.33     [-0.85,+0.60] NO CLEAR WINNER    DEFAULT:no evidence (empty bucket)  SA     
+  89      lead_qualification          4  3  (w4)    0      0.50±0.29 $0.0022  0.50±0.29 $0.0022  0.50±0.29 $0.0022  SA    0.34     [-0.84,+0.58] NO CLEAR WINNER    DEFAULT:no evidence (empty bucket)  SA     
+  122     monthly_trend_analysis      1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.42     [-0.25,+0.21] NO CLEAR WINNER    ok                                  -(tied)
+  125     monthly_trend_analysis      1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.42     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  334     top_issue_identification    1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.42     [-0.26,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  348     top_issue_identification    1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.42     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  421     sales_insight_mining        1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.42     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  446     sales_insight_mining        1  4  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.42     [-0.26,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  672     invalid_config              1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.42     [-0.26,+0.21] NO CLEAR WINNER    ok                                  -(tied)
+  722     knowledge_qa                1  1  (w1)    14     0.15±0.09 $0.0020  0.10±0.07 $0.0022  0.14±0.08 $0.0016  SA    0.42     [-0.25,+0.23] NO CLEAR WINNER    ok                                  WF     
+  792     sales_amount_understanding  1  4  (w1)    14     0.15±0.09 $0.0017  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.42     [-0.26,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  1030    conversion_rate_comprehens  1  4  (w1)    14     0.12±0.08 $0.0023  0.11±0.07 $0.0027  0.14±0.08 $0.0020  MA    0.42     [-0.24,+0.21] NO CLEAR WINNER    ok                                  SA     
+  1089    best_region_identification  1  3  (w1)    14     0.08±0.07 $0.0023  0.11±0.07 $0.0025  0.14±0.08 $0.0020  MA    0.50     [-0.22,+0.23] NO CLEAR WINNER    ok                                  SA     
+  1463    policy_violation_identific  1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.41     [-0.26,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  1563    case_routing                1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0020  SA    0.41     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  1624    private_customer_informati  1  3  (w1)    14     0.15±0.09 $0.0024  0.09±0.07 $0.0027  0.09±0.07 $0.0021  SA    0.54     [-0.21,+0.25] NO CLEAR WINNER    ok                                  MA     
+  1654    private_customer_informati  1  3  (w1)    14     0.15±0.09 $0.0024  0.09±0.07 $0.0027  0.09±0.07 $0.0021  SA    0.54     [-0.21,+0.25] NO CLEAR WINNER    ok                                  MA     
+  1857    quote_approval              1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.42     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  1914    internal_operation_data     1  5  (w1)    14     0.15±0.09 $0.0023  0.07±0.06 $0.0027  0.10±0.07 $0.0021  SA    0.56     [-0.20,+0.25] NO CLEAR WINNER    ok                                  MA     
+  1936    internal_operation_data     1  5  (w1)    14     0.15±0.09 $0.0023  0.07±0.06 $0.0027  0.10±0.07 $0.0021  SA    0.57     [-0.19,+0.25] NO CLEAR WINNER    ok                                  WF     
+  1942    named_entity_disambiguatio  1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.42     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  2056    sales_cycle_understanding   1  4  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0023  0.14±0.08 $0.0021  SA    0.42     [-0.25,+0.23] NO CLEAR WINNER    ok                                  -(tied)
+  900001  churn_risk_assessment       2  4  (w2)    1      0.33±0.24 $0.0021  0.39±0.24 $0.0039  0.61±0.24 $0.0043  MA    0.64     [-0.55,+0.71] NO CLEAR WINNER    n=1 (cost SE unavailable)           SA     
+  900002  dual_signal_account_flaggi  2  3  (w2)    1      0.42±0.25 $0.0015  0.38±0.24 $0.0027  0.38±0.24 $0.0026  SA    0.38     [-0.71,+0.58] NO CLEAR WINNER    n=1 (cost SE unavailable)           MA     
+
+   lambda = 10
+  task    category                    w  d  bucket  n_cat  SA mu±sd $         WF mu±sd $         MA mu±sd $         pick  P(best)  95% CI gap U(sel)-U(best other)  evidence                            oracle 
+  ------  --------------------------  -  -  ------  -----  -----------------  -----------------  -----------------  ----  -------  -------------------------------  ----------------------------------  -------
+  36      lead_qualification          4  3  (w4)    0      0.50±0.29 $0.0022  0.50±0.29 $0.0022  0.50±0.29 $0.0022  SA    0.33     [-0.85,+0.60] NO CLEAR WINNER    DEFAULT:no evidence (empty bucket)  SA     
+  89      lead_qualification          4  3  (w4)    0      0.50±0.29 $0.0022  0.50±0.29 $0.0022  0.50±0.29 $0.0022  SA    0.34     [-0.84,+0.58] NO CLEAR WINNER    DEFAULT:no evidence (empty bucket)  SA     
+  122     monthly_trend_analysis      1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.42     [-0.25,+0.21] NO CLEAR WINNER    ok                                  -(tied)
+  125     monthly_trend_analysis      1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.42     [-0.26,+0.23] NO CLEAR WINNER    ok                                  -(tied)
+  334     top_issue_identification    1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.41     [-0.26,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  348     top_issue_identification    1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.41     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  421     sales_insight_mining        1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.41     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  446     sales_insight_mining        1  4  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.42     [-0.26,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  672     invalid_config              1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.42     [-0.26,+0.21] NO CLEAR WINNER    ok                                  -(tied)
+  722     knowledge_qa                1  1  (w1)    14     0.15±0.09 $0.0020  0.10±0.07 $0.0022  0.14±0.08 $0.0016  SA    0.42     [-0.25,+0.23] NO CLEAR WINNER    ok                                  SA     
+  792     sales_amount_understanding  1  4  (w1)    14     0.15±0.09 $0.0017  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.44     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  1030    conversion_rate_comprehens  1  4  (w1)    14     0.12±0.08 $0.0023  0.11±0.07 $0.0027  0.14±0.08 $0.0020  MA    0.44     [-0.23,+0.22] NO CLEAR WINNER    ok                                  SA     
+  1089    best_region_identification  1  3  (w1)    14     0.08±0.07 $0.0023  0.11±0.07 $0.0025  0.14±0.08 $0.0020  MA    0.51     [-0.21,+0.23] NO CLEAR WINNER    ok                                  SA     
+  1463    policy_violation_identific  1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.40     [-0.26,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  1563    case_routing                1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0020  SA    0.40     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  1624    private_customer_informati  1  3  (w1)    14     0.15±0.09 $0.0024  0.09±0.07 $0.0027  0.09±0.07 $0.0021  SA    0.54     [-0.20,+0.25] NO CLEAR WINNER    ok                                  MA     
+  1654    private_customer_informati  1  3  (w1)    14     0.15±0.09 $0.0024  0.09±0.07 $0.0027  0.09±0.07 $0.0021  SA    0.54     [-0.21,+0.25] NO CLEAR WINNER    ok                                  MA     
+  1857    quote_approval              1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.41     [-0.25,+0.23] NO CLEAR WINNER    ok                                  -(tied)
+  1914    internal_operation_data     1  5  (w1)    14     0.15±0.09 $0.0023  0.07±0.06 $0.0027  0.10±0.07 $0.0021  SA    0.56     [-0.20,+0.25] NO CLEAR WINNER    ok                                  MA     
+  1936    internal_operation_data     1  5  (w1)    14     0.15±0.09 $0.0023  0.07±0.06 $0.0027  0.10±0.07 $0.0021  SA    0.57     [-0.20,+0.25] NO CLEAR WINNER    ok                                  WF     
+  1942    named_entity_disambiguatio  1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0026  0.14±0.08 $0.0021  SA    0.42     [-0.25,+0.22] NO CLEAR WINNER    ok                                  -(tied)
+  2056    sales_cycle_understanding   1  4  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0023  0.14±0.08 $0.0021  SA    0.41     [-0.25,+0.23] NO CLEAR WINNER    ok                                  -(tied)
+  900001  churn_risk_assessment       2  4  (w2)    1      0.33±0.24 $0.0021  0.39±0.24 $0.0039  0.61±0.24 $0.0043  MA    0.63     [-0.56,+0.70] NO CLEAR WINNER    n=1 (cost SE unavailable)           SA     
+  900002  dual_signal_account_flaggi  2  3  (w2)    1      0.42±0.25 $0.0015  0.38±0.24 $0.0027  0.38±0.24 $0.0026  SA    0.39     [-0.70,+0.60] NO CLEAR WINNER    n=1 (cost SE unavailable)           MA     
+
+   lambda = 100
+  task    category                    w  d  bucket  n_cat  SA mu±sd $         WF mu±sd $         MA mu±sd $         pick  P(best)  95% CI gap U(sel)-U(best other)  evidence                            oracle 
+  ------  --------------------------  -  -  ------  -----  -----------------  -----------------  -----------------  ----  -------  -------------------------------  ----------------------------------  -------
+  36      lead_qualification          4  3  (w4)    0      0.50±0.29 $0.0022  0.50±0.29 $0.0022  0.50±0.29 $0.0022  SA    0.33     [-0.85,+0.60] NO CLEAR WINNER    DEFAULT:no evidence (empty bucket)  SA     
+  89      lead_qualification          4  3  (w4)    0      0.50±0.29 $0.0022  0.50±0.29 $0.0022  0.50±0.29 $0.0022  SA    0.34     [-0.84,+0.58] NO CLEAR WINNER    DEFAULT:no evidence (empty bucket)  SA     
+  122     monthly_trend_analysis      1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.45     [-0.28,+0.26] NO CLEAR WINNER    ok                                  -(tied)
+  125     monthly_trend_analysis      1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.45     [-0.30,+0.27] NO CLEAR WINNER    ok                                  -(tied)
+  334     top_issue_identification    1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.46     [-0.29,+0.26] NO CLEAR WINNER    ok                                  -(tied)
+  348     top_issue_identification    1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.47     [-0.29,+0.27] NO CLEAR WINNER    ok                                  -(tied)
+  421     sales_insight_mining        1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  MA    0.48     [-0.29,+0.26] NO CLEAR WINNER    ok                                  -(tied)
+  446     sales_insight_mining        1  4  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  MA    0.47     [-0.29,+0.27] NO CLEAR WINNER    ok                                  -(tied)
+  672     invalid_config              1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  MA    0.47     [-0.28,+0.27] NO CLEAR WINNER    ok                                  -(tied)
+  722     knowledge_qa                1  1  (w1)    14     0.15±0.09 $0.0020  0.10±0.07 $0.0022  0.14±0.08 $0.0016  MA    0.52     [-0.26,+0.26] NO CLEAR WINNER    ok                                  SA     
+  792     sales_amount_understanding  1  4  (w1)    14     0.15±0.09 $0.0017  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.57     [-0.24,+0.29] NO CLEAR WINNER    ok                                  -(tied)
+  1030    conversion_rate_comprehens  1  4  (w1)    14     0.12±0.08 $0.0023  0.11±0.07 $0.0027  0.14±0.08 $0.0020  MA    0.53     [-0.25,+0.28] NO CLEAR WINNER    ok                                  SA     
+  1089    best_region_identification  1  3  (w1)    14     0.08±0.07 $0.0023  0.11±0.07 $0.0025  0.14±0.08 $0.0020  MA    0.57     [-0.24,+0.29] NO CLEAR WINNER    ok                                  SA     
+  1463    policy_violation_identific  1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.48     [-0.28,+0.27] NO CLEAR WINNER    ok                                  -(tied)
+  1563    case_routing                1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0020  MA    0.49     [-0.28,+0.28] NO CLEAR WINNER    ok                                  -(tied)
+  1624    private_customer_informati  1  3  (w1)    14     0.15±0.09 $0.0024  0.09±0.07 $0.0027  0.09±0.07 $0.0021  SA    0.50     [-0.27,+0.29] NO CLEAR WINNER    ok                                  MA     
+  1654    private_customer_informati  1  3  (w1)    14     0.15±0.09 $0.0024  0.09±0.07 $0.0027  0.09±0.07 $0.0021  SA    0.50     [-0.27,+0.29] NO CLEAR WINNER    ok                                  MA     
+  1857    quote_approval              1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  MA    0.48     [-0.28,+0.27] NO CLEAR WINNER    ok                                  -(tied)
+  1914    internal_operation_data     1  5  (w1)    14     0.15±0.09 $0.0023  0.07±0.06 $0.0027  0.10±0.07 $0.0021  SA    0.52     [-0.28,+0.29] NO CLEAR WINNER    ok                                  MA     
+  1936    internal_operation_data     1  5  (w1)    14     0.15±0.09 $0.0023  0.07±0.06 $0.0027  0.10±0.07 $0.0021  SA    0.51     [-0.27,+0.29] NO CLEAR WINNER    ok                                  WF     
+  1942    named_entity_disambiguatio  1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.45     [-0.29,+0.27] NO CLEAR WINNER    ok                                  -(tied)
+  2056    sales_cycle_understanding   1  4  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0023  0.14±0.08 $0.0021  MA    0.42     [-0.30,+0.24] NO CLEAR WINNER    ok                                  -(tied)
+  900001  churn_risk_assessment       2  4  (w2)    1      0.33±0.24 $0.0021  0.39±0.24 $0.0039  0.61±0.24 $0.0043  MA    0.49     [-0.68,+0.57] NO CLEAR WINNER    n=1 (cost SE unavailable)           SA     
+  900002  dual_signal_account_flaggi  2  3  (w2)    1      0.42±0.25 $0.0015  0.38±0.24 $0.0027  0.38±0.24 $0.0026  SA    0.52     [-0.59,+0.70] NO CLEAR WINNER    n=1 (cost SE unavailable)           MA     
+
+   lambda = 300
+  task    category                    w  d  bucket  n_cat  SA mu±sd $         WF mu±sd $         MA mu±sd $         pick  P(best)  95% CI gap U(sel)-U(best other)  evidence                            oracle 
+  ------  --------------------------  -  -  ------  -----  -----------------  -----------------  -----------------  ----  -------  -------------------------------  ----------------------------------  -------
+  36      lead_qualification          4  3  (w4)    0      0.50±0.29 $0.0022  0.50±0.29 $0.0022  0.50±0.29 $0.0022  SA    0.33     [-0.85,+0.60] NO CLEAR WINNER    DEFAULT:no evidence (empty bucket)  SA     
+  89      lead_qualification          4  3  (w4)    0      0.50±0.29 $0.0022  0.50±0.29 $0.0022  0.50±0.29 $0.0022  SA    0.34     [-0.84,+0.58] NO CLEAR WINNER    DEFAULT:no evidence (empty bucket)  SA     
+  122     monthly_trend_analysis      1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.50     [-0.53,+0.48] NO CLEAR WINNER    ok                                  -(tied)
+  125     monthly_trend_analysis      1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.50     [-0.53,+0.50] NO CLEAR WINNER    ok                                  -(tied)
+  334     top_issue_identification    1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.50     [-0.50,+0.50] NO CLEAR WINNER    ok                                  -(tied)
+  348     top_issue_identification    1  3  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.52     [-0.53,+0.49] NO CLEAR WINNER    ok                                  -(tied)
+  421     sales_insight_mining        1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  MA    0.53     [-0.51,+0.50] NO CLEAR WINNER    ok                                  -(tied)
+  446     sales_insight_mining        1  4  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  MA    0.53     [-0.51,+0.51] NO CLEAR WINNER    ok                                  -(tied)
+  672     invalid_config              1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  MA    0.52     [-0.51,+0.50] NO CLEAR WINNER    ok                                  -(tied)
+  722     knowledge_qa                1  1  (w1)    14     0.15±0.09 $0.0020  0.10±0.07 $0.0022  0.14±0.08 $0.0016  MA    0.64     [-0.34,+0.42] NO CLEAR WINNER    ok                                  SA     
+  792     sales_amount_understanding  1  4  (w1)    14     0.15±0.09 $0.0017  0.11±0.07 $0.0027  0.14±0.08 $0.0021  SA    0.65     [-0.33,+0.50] NO CLEAR WINNER    ok                                  -(tied)
+  1030    conversion_rate_comprehens  1  4  (w1)    14     0.12±0.08 $0.0023  0.11±0.07 $0.0027  0.14±0.08 $0.0020  MA    0.56     [-0.46,+0.54] NO CLEAR WINNER    ok                                  SA     
+  1089    best_region_identification  1  3  (w1)    14     0.08±0.07 $0.0023  0.11±0.07 $0.0025  0.14±0.08 $0.0020  MA    0.56     [-0.47,+0.53] NO CLEAR WINNER    ok                                  SA     
+  1463    policy_violation_identific  1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.53     [-0.49,+0.52] NO CLEAR WINNER    ok                                  -(tied)
+  1563    case_routing                1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0020  MA    0.55     [-0.50,+0.54] NO CLEAR WINNER    ok                                  -(tied)
+  1624    private_customer_informati  1  3  (w1)    14     0.15±0.09 $0.0024  0.09±0.07 $0.0027  0.09±0.07 $0.0021  MA    0.46     [-0.55,+0.46] NO CLEAR WINNER    ok                                  MA     
+  1654    private_customer_informati  1  3  (w1)    14     0.15±0.09 $0.0024  0.09±0.07 $0.0027  0.09±0.07 $0.0021  MA    0.44     [-0.56,+0.46] NO CLEAR WINNER    ok                                  MA     
+  1857    quote_approval              1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0027  0.14±0.08 $0.0021  MA    0.54     [-0.51,+0.53] NO CLEAR WINNER    ok                                  -(tied)
+  1914    internal_operation_data     1  5  (w1)    14     0.15±0.09 $0.0023  0.07±0.06 $0.0027  0.10±0.07 $0.0021  MA    0.46     [-0.55,+0.46] NO CLEAR WINNER    ok                                  MA     
+  1936    internal_operation_data     1  5  (w1)    14     0.15±0.09 $0.0023  0.07±0.06 $0.0027  0.10±0.07 $0.0021  MA    0.46     [-0.55,+0.46] NO CLEAR WINNER    ok                                  WF     
+  1942    named_entity_disambiguatio  1  3  (w1)    14     0.15±0.09 $0.0024  0.11±0.07 $0.0026  0.14±0.08 $0.0021  MA    0.51     [-0.53,+0.52] NO CLEAR WINNER    ok                                  -(tied)
+  2056    sales_cycle_understanding   1  4  (w1)    14     0.15±0.09 $0.0023  0.11±0.07 $0.0023  0.14±0.08 $0.0021  MA    0.44     [-0.54,+0.44] NO CLEAR WINNER    ok                                  -(tied)
+  900001  churn_risk_assessment       2  4  (w2)    1      0.33±0.24 $0.0021  0.39±0.24 $0.0039  0.61±0.24 $0.0043  SA    0.79     [-0.25,+0.93] NO CLEAR WINNER    n=1 (cost SE unavailable)           SA     
+  900002  dual_signal_account_flaggi  2  3  (w2)    1      0.42±0.25 $0.0015  0.38±0.24 $0.0027  0.38±0.24 $0.0026  SA    0.77     [-0.36,+0.93] NO CLEAR WINNER    n=1 (cost SE unavailable)           MA     
+
+################################################################################################################################
+2. BUCKET-DEFINITION VARIANTS (labelled; none is the headline).  LOCO first, LOTO (optimistic) below each.
+################################################################################################################################
+
+   width+depth (exploratory) -- LOCO
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.408 (0.441)                 8                          3/11       2.7            MA 0.255    0.320/0.406/0.255  +0.153 (+0.186)                     [+0.052, +0.421] ([+0.028, +0.501])  -60% (-73%)                      
+  10      0.426 (0.441)                 7                          4/11       2.3            MA 0.265    0.318/0.418/0.265  +0.161 (+0.176)                     [+0.066, +0.436] ([+0.028, +0.501])  -61% (-66%)                      
+  100     0.508 (0.453)                 7                          4/11       2.3            SA 0.319    0.319/0.542/0.366  +0.189 (+0.134)                     [+0.089, +0.519] ([+0.000, +0.501])  -59% (-42%)                      
+  300     0.581 (0.370)                 7                          5/11       3.3            SA 0.321    0.321/0.815/0.592  +0.260 (+0.049)                     [+0.000, +0.706] ([+0.000, +0.417])  -81% (-15%)                      
+
+   width+depth (exploratory) -- LOTO (OPTIMISTIC)
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.332 (0.380)                 5                          3/11       3.8            MA 0.255    0.320/0.406/0.255  +0.077 (+0.125)                     [-0.050, +0.369] ([-0.028, +0.436])  -30% (-49%)                      
+  10      0.360 (0.379)                 3                          4/11       3.0            MA 0.265    0.318/0.418/0.265  +0.095 (+0.114)                     [-0.046, +0.409] ([-0.031, +0.437])  -36% (-43%)                      
+  100     0.394 (0.384)                 3                          4/11       3.0            SA 0.319    0.319/0.542/0.366  +0.075 (+0.065)                     [-0.069, +0.439] ([-0.076, +0.435])  -23% (-20%)                      
+  300     0.360 (0.285)                 3                          5/11       4.0            SA 0.321    0.321/0.815/0.592  +0.039 (-0.036)                     [-0.130, +0.354] ([-0.175, +0.298])  -12% (+11%)                      
+
+   width+privacy_category_flag (diagnostic; leaks category) -- LOCO
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.226 (0.120)                 4                          7/11       4.7            MA 0.255    0.320/0.406/0.255  -0.029 (-0.135)                     [-0.166, +0.234] ([-0.249, +0.141])  +12% (+53%)                      
+  10      0.183 (0.117)                 2                          8/11       6.7            MA 0.265    0.318/0.418/0.265  -0.082 (-0.148)                     [-0.208, +0.198] ([-0.254, +0.133])  +31% (+56%)                      
+  100     0.319 (0.206)                 2                          7/11       5.7            SA 0.319    0.319/0.542/0.366  +0.000 (-0.113)                     [-0.113, +0.458] ([-0.251, +0.292])  -0% (+35%)                       
+  300     0.490 (0.271)                 2                          6/11       4.7            SA 0.321    0.321/0.815/0.592  +0.169 (-0.050)                     [-0.101, +0.813] ([-0.318, +0.467])  -53% (+16%)                      
+
+   width+privacy_category_flag (diagnostic; leaks category) -- LOTO (OPTIMISTIC)
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.120 (0.120)                 0                          7/11       7.0            MA 0.255    0.320/0.406/0.255  -0.135 (-0.135)                     [-0.249, +0.141] ([-0.249, +0.141])  +53% (+53%)                      
+  10      0.117 (0.117)                 0                          8/11       8.0            MA 0.265    0.318/0.418/0.265  -0.148 (-0.148)                     [-0.254, +0.133] ([-0.254, +0.133])  +56% (+56%)                      
+  100     0.206 (0.206)                 0                          7/11       7.0            SA 0.319    0.319/0.542/0.366  -0.113 (-0.113)                     [-0.251, +0.292] ([-0.251, +0.292])  +35% (+35%)                      
+  300     0.271 (0.271)                 0                          6/11       6.0            SA 0.321    0.321/0.815/0.592  -0.050 (-0.050)                     [-0.318, +0.467] ([-0.318, +0.467])  +16% (+16%)                      
+
+   width+privacy_LLM_flag (diagnostic) -- LOCO
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.502 (0.452)                 3                          2/11       1.0            MA 0.255    0.320/0.406/0.255  +0.247 (+0.197)                     [+0.159, +0.497] ([+0.038, +0.513])  -97% (-77%)                      
+  10      0.511 (0.455)                 3                          2/11       1.0            MA 0.265    0.318/0.418/0.265  +0.246 (+0.190)                     [+0.169, +0.502] ([+0.042, +0.512])  -93% (-72%)                      
+  100     0.493 (0.391)                 3                          3/11       2.0            SA 0.319    0.319/0.542/0.366  +0.174 (+0.072)                     [+0.019, +0.542] ([-0.113, +0.461])  -54% (-22%)                      
+  300     0.513 (0.308)                 3                          5/11       4.0            SA 0.321    0.321/0.815/0.592  +0.192 (-0.013)                     [-0.075, +0.816] ([-0.272, +0.477])  -60% (+4%)                       
+
+   width+privacy_LLM_flag (diagnostic) -- LOTO (OPTIMISTIC)
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.351 (0.361)                 1                          3/11       3.3            MA 0.255    0.320/0.406/0.255  +0.096 (+0.106)                     [-0.067, +0.417] ([-0.062, +0.439])  -38% (-42%)                      
+  10      0.353 (0.363)                 1                          3/11       3.3            MA 0.265    0.318/0.418/0.265  +0.088 (+0.098)                     [-0.071, +0.415] ([-0.064, +0.439])  -33% (-37%)                      
+  100     0.379 (0.391)                 1                          3/11       3.3            SA 0.319    0.319/0.542/0.366  +0.060 (+0.072)                     [-0.121, +0.440] ([-0.113, +0.461])  -19% (-22%)                      
+  300     0.294 (0.308)                 1                          5/11       5.3            SA 0.321    0.321/0.815/0.592  -0.027 (-0.013)                     [-0.287, +0.472] ([-0.272, +0.477])  +8% (+4%)                        
+
+################################################################################################################################
+3. SENSITIVITY ANALYSES (each labelled; headline definition width-only unless stated; LOCO, LOTO alongside)
+################################################################################################################################
+
+   (a) exclude task 722 from scoring [width, LOCO, 10 scored tasks]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.563 (0.497)                 2                          2/10       0.7            MA 0.280    0.350/0.447/0.280  +0.283 (+0.217)                     [+0.194, +0.567] ([+0.042, +0.561])  -101% (-77%)                     
+  10      0.572 (0.499)                 2                          2/10       0.7            MA 0.290    0.350/0.460/0.290  +0.282 (+0.209)                     [+0.201, +0.568] ([+0.043, +0.564])  -97% (-72%)                      
+  100     0.647 (0.523)                 2                          2/10       0.7            SA 0.351    0.351/0.575/0.380  +0.296 (+0.172)                     [+0.255, +0.606] ([+0.037, +0.565])  -84% (-49%)                      
+  300     0.468 (0.227)                 2                          6/10       4.7            SA 0.353    0.353/0.833/0.580  +0.115 (-0.126)                     [-0.135, +0.844] ([-0.364, +0.422])  -32% (+36%)                      
+
+   (a) exclude task 722 from scoring [width, LOTO, 10 scored tasks]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.430 (0.430)                 0                          3/10       3.0            MA 0.280    0.350/0.447/0.280  +0.150 (+0.150)                     [+0.000, +0.467] ([+0.000, +0.467])  -54% (-54%)                      
+  10      0.432 (0.432)                 0                          3/10       3.0            MA 0.290    0.350/0.460/0.290  +0.142 (+0.142)                     [-0.000, +0.464] ([-0.000, +0.464])  -49% (-49%)                      
+  100     0.371 (0.371)                 0                          4/10       4.0            SA 0.351    0.351/0.575/0.380  +0.020 (+0.020)                     [-0.142, +0.437] ([-0.142, +0.437])  -6% (-6%)                        
+  300     0.227 (0.227)                 0                          6/10       6.0            SA 0.353    0.353/0.833/0.580  -0.126 (-0.126)                     [-0.364, +0.422] ([-0.364, +0.422])  +36% (+36%)                      
+
+   (b) exclude custom tasks 900001/900002 from scoring [width, LOCO, 9 scored tasks]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.520 (0.446)                 2                          2/9        0.7            MA 0.297    0.298/0.407/0.297  +0.223 (+0.149)                     [+0.167, +0.545] ([+0.033, +0.524])  -75% (-50%)                      
+  10      0.529 (0.448)                 2                          3/9        1.7            SA 0.299    0.299/0.422/0.308  +0.230 (+0.150)                     [+0.176, +0.550] ([+0.031, +0.529])  -77% (-50%)                      
+  100     0.649 (0.510)                 2                          2/9        0.7            SA 0.321    0.321/0.564/0.421  +0.328 (+0.189)                     [+0.248, +0.660] ([+0.037, +0.571])  -102% (-59%)                     
+  300     0.578 (0.310)                 2                          5/9        3.7            SA 0.371    0.371/0.881/0.672  +0.206 (-0.061)                     [-0.085, +1.061] ([-0.344, +0.626])  -56% (+17%)                      
+
+   (b) exclude custom tasks 900001/900002 from scoring [width, LOTO, 9 scored tasks]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.372 (0.372)                 0                          3/9        3.0            MA 0.297    0.298/0.407/0.297  +0.075 (+0.075)                     [-0.031, +0.429] ([-0.031, +0.429])  -25% (-25%)                      
+  10      0.374 (0.374)                 0                          4/9        4.0            SA 0.299    0.299/0.422/0.308  +0.075 (+0.075)                     [-0.033, +0.432] ([-0.033, +0.432])  -25% (-25%)                      
+  100     0.342 (0.342)                 0                          4/9        4.0            SA 0.321    0.321/0.564/0.421  +0.020 (+0.020)                     [-0.175, +0.478] ([-0.175, +0.478])  -6% (-6%)                        
+  300     0.310 (0.310)                 0                          5/9        5.0            SA 0.371    0.371/0.881/0.672  -0.061 (-0.061)                     [-0.344, +0.626] ([-0.344, +0.626])  +17% (+17%)                      
+
+   (f) PRIVACY SENSITIVITY: exclude privacy tasks 1624/1654/1914/1936 from scoring (their rewards are confounded; see CLAUDE.md audit) [width, LOCO, 7 scored tasks]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.426 (0.331)                 2                          2/7        0.7            SA 0.121    0.121/0.448/0.353  +0.305 (+0.210)                     [+0.142, +0.571] ([+0.019, +0.556])  -251% (-173%)                    
+  10      0.433 (0.329)                 2                          3/7        1.7            SA 0.116    0.116/0.466/0.369  +0.317 (+0.213)                     [+0.137, +0.584] ([+0.021, +0.560])  -273% (-184%)                    
+  100     0.545 (0.367)                 2                          2/7        0.7            SA 0.088    0.088/0.649/0.528  +0.456 (+0.278)                     [+0.213, +0.705] ([+0.061, +0.640])  -516% (-315%)                    
+  300     0.723 (0.378)                 2                          3/7        1.7            SA 0.027    0.027/1.057/0.884  +0.696 (+0.351)                     [+0.209, +1.056] ([+0.067, +0.791])  -2568% (-1297%)                  
+
+   (f) PRIVACY SENSITIVITY: exclude privacy tasks 1624/1654/1914/1936 from scoring (their rewards are confounded; see CLAUDE.md audit) [width, LOTO, 7 scored tasks]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.331 (0.331)                 0                          2/7        2.0            SA 0.121    0.121/0.448/0.353  +0.210 (+0.210)                     [+0.019, +0.556] ([+0.019, +0.556])  -173% (-173%)                    
+  10      0.329 (0.329)                 0                          3/7        3.0            SA 0.116    0.116/0.466/0.369  +0.213 (+0.213)                     [+0.021, +0.560] ([+0.021, +0.560])  -184% (-184%)                    
+  100     0.367 (0.367)                 0                          2/7        2.0            SA 0.088    0.088/0.649/0.528  +0.278 (+0.278)                     [+0.061, +0.640] ([+0.061, +0.640])  -315% (-315%)                    
+  300     0.378 (0.378)                 0                          3/7        3.0            SA 0.027    0.027/1.057/0.884  +0.351 (+0.351)                     [+0.067, +0.791] ([+0.067, +0.791])  -1297% (-1297%)                  
+
+   scored set under F1: [36, 89, 722, 1030, 1089, 1624, 1654, 1914, 1936, 900001, 900002] (structured: [36, 89, 722, 1030, 1089, 1624, 1654, 1914, 1936, 900001, 900002])
+
+   (c) ORIGINAL F1 METRIC [width, LOCO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.426 (0.365)                 2                          4/11       2.7            SA 0.244    0.244/0.346/0.254  +0.182 (+0.121)                     [+0.111, +0.444] ([+0.014, +0.432])  -75% (-50%)                      
+  10      0.433 (0.367)                 2                          5/11       3.7            SA 0.244    0.244/0.361/0.266  +0.188 (+0.122)                     [+0.108, +0.448] ([+0.000, +0.434])  -77% (-50%)                      
+  100     0.531 (0.418)                 2                          4/11       2.7            SA 0.263    0.263/0.501/0.385  +0.268 (+0.155)                     [+0.150, +0.536] ([+0.019, +0.467])  -102% (-59%)                     
+  300     0.473 (0.254)                 2                          7/11       5.7            SA 0.304    0.304/0.814/0.649  +0.169 (-0.050)                     [-0.167, +0.813] ([-0.335, +0.467])  -56% (+17%)                      
+
+   (d) OVERCONFIDENT SENSITIVITY: TREATS REPEATED RUNS AS INDEPENDENT EVIDENCE [width, LOCO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.422 (0.361)                 2                          3/11       1.7            MA 0.255    0.320/0.406/0.255  +0.167 (+0.106)                     [+0.022, +0.465] ([-0.062, +0.439])  -65% (-42%)                      
+  10      0.429 (0.363)                 2                          3/11       1.7            MA 0.265    0.318/0.418/0.265  +0.164 (+0.098)                     [+0.028, +0.466] ([-0.064, +0.439])  -62% (-37%)                      
+  100     0.377 (0.263)                 2                          5/11       3.7            SA 0.319    0.319/0.542/0.366  +0.058 (-0.056)                     [-0.042, +0.527] ([-0.222, +0.379])  -18% (+17%)                      
+  300     0.490 (0.271)                 2                          6/11       4.7            SA 0.321    0.321/0.815/0.592  +0.169 (-0.050)                     [-0.101, +0.813] ([-0.318, +0.467])  -53% (+16%)                      
+      mean posterior SD over populated buckets: category-level 0.094 vs run-level 0.051 (run-level is narrower: overconfident)
+
+   (e) RATIO-ANCHORED COST (router.py estimator, k=2) [width, LOCO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.514 (0.453)                 2                          2/11       0.7            MA 0.255    0.320/0.406/0.255  +0.259 (+0.198)                     [+0.167, +0.517] ([+0.039, +0.513])  -101% (-78%)                     
+  10      0.520 (0.454)                 2                          3/11       1.7            MA 0.265    0.318/0.418/0.265  +0.255 (+0.189)                     [+0.176, +0.513] ([+0.040, +0.510])  -96% (-71%)                      
+  100     0.589 (0.475)                 2                          3/11       1.7            SA 0.319    0.319/0.542/0.366  +0.270 (+0.156)                     [+0.193, +0.550] ([+0.031, +0.510])  -84% (-49%)                      
+  300     0.742 (0.523)                 2                          3/11       1.7            SA 0.321    0.321/0.815/0.592  +0.421 (+0.202)                     [+0.187, +0.820] ([+0.036, +0.549])  -131% (-63%)                     
+
+   (c) ORIGINAL F1 METRIC [width, LOTO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.304 (0.304)                 0                          5/11       5.0            SA 0.244    0.244/0.346/0.254  +0.061 (+0.061)                     [-0.028, +0.335] ([-0.028, +0.335])  -25% (-25%)                      
+  10      0.306 (0.306)                 0                          6/11       6.0            SA 0.244    0.244/0.361/0.266  +0.061 (+0.061)                     [-0.028, +0.337] ([-0.028, +0.337])  -25% (-25%)                      
+  100     0.279 (0.279)                 0                          6/11       6.0            SA 0.263    0.263/0.501/0.385  +0.017 (+0.017)                     [-0.169, +0.372] ([-0.169, +0.372])  -6% (-6%)                        
+  300     0.254 (0.254)                 0                          7/11       7.0            SA 0.304    0.304/0.814/0.649  -0.050 (-0.050)                     [-0.335, +0.467] ([-0.335, +0.467])  +17% (+17%)                      
+
+   (d) OVERCONFIDENT SENSITIVITY: TREATS REPEATED RUNS AS INDEPENDENT EVIDENCE [width, LOTO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.240 (0.240)                 0                          5/11       5.0            MA 0.255    0.320/0.406/0.255  -0.015 (-0.015)                     [-0.154, +0.331] ([-0.154, +0.331])  +6% (+6%)                        
+  10      0.241 (0.241)                 0                          5/11       5.0            MA 0.265    0.318/0.418/0.265  -0.024 (-0.024)                     [-0.155, +0.330] ([-0.155, +0.330])  +9% (+9%)                        
+  100     0.263 (0.263)                 0                          5/11       5.0            SA 0.319    0.319/0.542/0.366  -0.056 (-0.056)                     [-0.222, +0.379] ([-0.222, +0.379])  +17% (+17%)                      
+  300     0.271 (0.271)                 0                          6/11       6.0            SA 0.321    0.321/0.815/0.592  -0.050 (-0.050)                     [-0.318, +0.467] ([-0.318, +0.467])  +16% (+16%)                      
+      mean posterior SD over populated buckets: category-level 0.106 vs run-level 0.062 (run-level is narrower: overconfident)
+
+   (e) RATIO-ANCHORED COST (router.py estimator, k=2) [width, LOTO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.392 (0.392)                 0                          3/11       3.0            MA 0.255    0.320/0.406/0.255  +0.137 (+0.137)                     [+0.002, +0.424] ([+0.002, +0.424])  -54% (-54%)                      
+  10      0.393 (0.393)                 0                          4/11       4.0            MA 0.265    0.318/0.418/0.265  +0.128 (+0.128)                     [+0.000, +0.423] ([+0.000, +0.423])  -48% (-48%)                      
+  100     0.409 (0.409)                 0                          4/11       4.0            SA 0.319    0.319/0.542/0.366  +0.090 (+0.090)                     [-0.027, +0.420] ([-0.027, +0.420])  -28% (-28%)                      
+  300     0.445 (0.445)                 0                          4/11       4.0            SA 0.321    0.321/0.815/0.592  +0.124 (+0.124)                     [-0.063, +0.477] ([-0.063, +0.477])  -39% (-39%)                      
+
+   (c) ORIGINAL F1 METRIC [width+depth, LOCO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.362 (0.365)                 8                          4/11       2.7            SA 0.244    0.244/0.346/0.254  +0.118 (+0.121)                     [+0.026, +0.415] ([+0.014, +0.432])  -49% (-50%)                      
+  10      0.382 (0.367)                 7                          5/11       2.3            SA 0.244    0.244/0.361/0.266  +0.137 (+0.122)                     [+0.041, +0.435] ([+0.000, +0.434])  -56% (-50%)                      
+  100     0.482 (0.397)                 7                          5/11       2.3            SA 0.263    0.263/0.501/0.385  +0.219 (+0.134)                     [+0.065, +0.536] ([+0.000, +0.446])  -83% (-51%)                      
+  300     0.594 (0.353)                 7                          6/11       3.3            SA 0.304    0.304/0.814/0.649  +0.290 (+0.049)                     [+0.004, +0.732] ([+0.000, +0.365])  -96% (-16%)                      
+
+   (d) OVERCONFIDENT SENSITIVITY: TREATS REPEATED RUNS AS INDEPENDENT EVIDENCE [width+depth, LOCO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.408 (0.441)                 8                          3/11       2.7            MA 0.255    0.320/0.406/0.255  +0.153 (+0.186)                     [+0.052, +0.421] ([+0.028, +0.501])  -60% (-73%)                      
+  10      0.426 (0.441)                 7                          4/11       2.3            MA 0.265    0.318/0.418/0.265  +0.161 (+0.176)                     [+0.066, +0.436] ([+0.028, +0.501])  -61% (-66%)                      
+  100     0.508 (0.453)                 7                          4/11       2.3            SA 0.319    0.319/0.542/0.366  +0.189 (+0.134)                     [+0.089, +0.519] ([+0.000, +0.501])  -59% (-42%)                      
+  300     0.691 (0.480)                 7                          4/11       2.3            SA 0.321    0.321/0.815/0.592  +0.370 (+0.159)                     [+0.129, +0.834] ([+0.000, +0.523])  -115% (-49%)                     
+      mean posterior SD over populated buckets: category-level 0.115 vs run-level 0.056 (run-level is narrower: overconfident)
+
+   (e) RATIO-ANCHORED COST (router.py estimator, k=2) [width+depth, LOCO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.408 (0.441)                 8                          3/11       2.7            MA 0.255    0.320/0.406/0.255  +0.153 (+0.186)                     [+0.052, +0.421] ([+0.028, +0.501])  -60% (-73%)                      
+  10      0.426 (0.441)                 7                          4/11       2.3            MA 0.265    0.318/0.418/0.265  +0.161 (+0.176)                     [+0.066, +0.436] ([+0.028, +0.501])  -61% (-66%)                      
+  100     0.508 (0.453)                 7                          4/11       2.3            SA 0.319    0.319/0.542/0.366  +0.189 (+0.134)                     [+0.089, +0.519] ([+0.000, +0.501])  -59% (-42%)                      
+  300     0.581 (0.370)                 7                          5/11       3.3            SA 0.321    0.321/0.815/0.592  +0.260 (+0.049)                     [+0.000, +0.706] ([+0.000, +0.417])  -81% (-15%)                      
+
+   (c) ORIGINAL F1 METRIC [width+depth, LOTO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.286 (0.304)                 5                          4/11       3.8            SA 0.244    0.244/0.346/0.254  +0.043 (+0.061)                     [-0.048, +0.350] ([-0.051, +0.370])  -17% (-25%)                      
+  10      0.316 (0.306)                 3                          5/11       3.0            SA 0.244    0.244/0.361/0.266  +0.071 (+0.061)                     [-0.042, +0.384] ([-0.056, +0.373])  -29% (-25%)                      
+  100     0.368 (0.328)                 3                          5/11       3.0            SA 0.263    0.263/0.501/0.385  +0.105 (+0.065)                     [-0.063, +0.442] ([-0.093, +0.401])  -40% (-25%)                      
+  300     0.373 (0.267)                 3                          6/11       4.0            SA 0.304    0.304/0.814/0.649  +0.069 (-0.036)                     [-0.120, +0.358] ([-0.188, +0.239])  -23% (+12%)                      
+
+   (d) OVERCONFIDENT SENSITIVITY: TREATS REPEATED RUNS AS INDEPENDENT EVIDENCE [width+depth, LOTO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.332 (0.380)                 5                          3/11       3.8            MA 0.255    0.320/0.406/0.255  +0.077 (+0.125)                     [-0.050, +0.369] ([-0.028, +0.436])  -30% (-49%)                      
+  10      0.360 (0.379)                 3                          4/11       3.0            MA 0.265    0.318/0.418/0.265  +0.095 (+0.114)                     [-0.046, +0.409] ([-0.031, +0.437])  -36% (-43%)                      
+  100     0.394 (0.384)                 3                          4/11       3.0            SA 0.319    0.319/0.542/0.366  +0.075 (+0.065)                     [-0.069, +0.439] ([-0.076, +0.435])  -23% (-20%)                      
+  300     0.470 (0.395)                 3                          4/11       3.0            SA 0.321    0.321/0.815/0.592  +0.149 (+0.074)                     [-0.079, +0.531] ([-0.135, +0.453])  -46% (-23%)                      
+      mean posterior SD over populated buckets: category-level 0.138 vs run-level 0.080 (run-level is narrower: overconfident)
+
+   (e) RATIO-ANCHORED COST (router.py estimator, k=2) [width+depth, LOTO]
+  lambda  router regret tie-avg (det.)  default picks (of scored)  agree det  agree tie-avg  best fixed  always SA/WF/MA    router - best fixed tie-avg (det.)  95% cat-bootstrap CI tie-avg (det.)  headroom recovered tie-avg (det.)
+  ------  ----------------------------  -------------------------  ---------  -------------  ----------  -----------------  ----------------------------------  -----------------------------------  ---------------------------------
+  0       0.332 (0.380)                 5                          3/11       3.8            MA 0.255    0.320/0.406/0.255  +0.077 (+0.125)                     [-0.050, +0.369] ([-0.028, +0.436])  -30% (-49%)                      
+  10      0.360 (0.379)                 3                          4/11       3.0            MA 0.265    0.318/0.418/0.265  +0.095 (+0.114)                     [-0.046, +0.409] ([-0.031, +0.437])  -36% (-43%)                      
+  100     0.394 (0.384)                 3                          4/11       3.0            SA 0.319    0.319/0.542/0.366  +0.075 (+0.065)                     [-0.069, +0.439] ([-0.076, +0.435])  -23% (-20%)                      
+  300     0.360 (0.285)                 3                          5/11       4.0            SA 0.321    0.321/0.815/0.592  +0.039 (-0.036)                     [-0.130, +0.354] ([-0.175, +0.298])  -12% (+11%)                      
+
+################################################################################################################################
+4. COMPARISON WITH THE EXISTING router.py (picks over all 24 tasks; scored-11 listed)
+################################################################################################################################
+
+   width+priv_cat (like-for-like: same (width, has_refusal_check) buckets) vs existing zero-target (true flag), LOCO
+  lambda  scored same  scored changed (task: existing->new)                     unscored                                     
+  ------  -----------  -------------------------------------------------------  ------------  -------------------------------
+  0       11/11 same   -                                                        0/13 changed  IDENTICAL picks on all 24 tasks
+  10      11/11 same   -                                                        0/13 changed  IDENTICAL picks on all 24 tasks
+  100     10/11 same   1089: SA->MA                                             0/13 changed                                 
+  300     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 900001: MA->SA  0/13 changed                                 
+
+   width+priv_cat (like-for-like: same (width, has_refusal_check) buckets) vs existing zero-target (true flag), LOTO
+  lambda  scored same  scored changed (task: existing->new)                     unscored                                     
+  ------  -----------  -------------------------------------------------------  ------------  -------------------------------
+  0       11/11 same   -                                                        0/13 changed  IDENTICAL picks on all 24 tasks
+  10      11/11 same   -                                                        0/13 changed  IDENTICAL picks on all 24 tasks
+  100     10/11 same   1089: SA->MA                                             0/13 changed                                 
+  300     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 900001: MA->SA  0/13 changed                                 
+
+   width+priv_cat (like-for-like: same (width, has_refusal_check) buckets) vs existing pooled k=2 (true flag), LOCO
+  lambda  scored same  scored changed (task: existing->new)                     unscored      
+  ------  -----------  -------------------------------------------------------  ------------  
+  0       9/11 same    36: MA->SA; 89: MA->SA                                   0/13 changed  
+  10      9/11 same    36: MA->SA; 89: MA->SA                                   0/13 changed  
+  100     8/11 same    36: MA->SA; 89: MA->SA; 1089: SA->MA                     0/13 changed  
+  300     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 900001: MA->SA  0/13 changed  
+
+   width+priv_cat (like-for-like: same (width, has_refusal_check) buckets) vs existing pooled k=2 (true flag), LOTO
+  lambda  scored same  scored changed (task: existing->new)                     unscored                                     
+  ------  -----------  -------------------------------------------------------  ------------  -------------------------------
+  0       11/11 same   -                                                        0/13 changed  IDENTICAL picks on all 24 tasks
+  10      11/11 same   -                                                        0/13 changed  IDENTICAL picks on all 24 tasks
+  100     10/11 same   1089: SA->MA                                             0/13 changed                                 
+  300     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 900001: MA->SA  0/13 changed                                 
+
+   width+priv_llm (like-for-like: same (width, LLM-only refusal flag) buckets) vs existing zero-target (llm flag), LOCO
+  lambda  scored same  scored changed (task: existing->new)                      unscored                                     
+  ------  -----------  --------------------------------------------------------  ------------  -------------------------------
+  0       11/11 same   -                                                         0/13 changed  IDENTICAL picks on all 24 tasks
+  10      11/11 same   -                                                         0/13 changed  IDENTICAL picks on all 24 tasks
+  100     9/11 same    1914: SA->MA; 1936: SA->MA                                0/13 changed                                 
+  300     7/11 same    1654: SA->MA; 1914: SA->MA; 1936: SA->MA; 900001: MA->SA  0/13 changed                                 
+
+   width+priv_llm (like-for-like: same (width, LLM-only refusal flag) buckets) vs existing zero-target (llm flag), LOTO
+  lambda  scored same  scored changed (task: existing->new)        unscored                                     
+  ------  -----------  ------------------------------------------  ------------  -------------------------------
+  0       11/11 same   -                                           0/13 changed  IDENTICAL picks on all 24 tasks
+  10      11/11 same   -                                           0/13 changed  IDENTICAL picks on all 24 tasks
+  100     10/11 same   1914: SA->MA                                0/13 changed                                 
+  300     8/11 same    1654: SA->MA; 1914: SA->MA; 900001: MA->SA  1/13 changed                                 
+
+   width+priv_llm (like-for-like: same (width, LLM-only refusal flag) buckets) vs existing pooled k=2 (llm flag), LOCO
+  lambda  scored same  scored changed (task: existing->new)                      unscored      
+  ------  -----------  --------------------------------------------------------  ------------  
+  0       9/11 same    36: MA->SA; 89: MA->SA                                    0/13 changed  
+  10      9/11 same    36: MA->SA; 89: MA->SA                                    0/13 changed  
+  100     7/11 same    36: MA->SA; 89: MA->SA; 1914: SA->MA; 1936: SA->MA        0/13 changed  
+  300     7/11 same    1654: SA->MA; 1914: SA->MA; 1936: SA->MA; 900001: MA->SA  4/13 changed  
+
+   width+priv_llm (like-for-like: same (width, LLM-only refusal flag) buckets) vs existing pooled k=2 (llm flag), LOTO
+  lambda  scored same  scored changed (task: existing->new)        unscored      
+  ------  -----------  ------------------------------------------  ------------  
+  0       9/11 same    1624: MA->SA; 1914: SA->MA                  0/13 changed  
+  10      9/11 same    1624: MA->SA; 1914: SA->MA                  0/13 changed  
+  100     10/11 same   1914: SA->MA                                0/13 changed  
+  300     8/11 same    1654: SA->MA; 1914: SA->MA; 900001: MA->SA  5/13 changed  
+
+   width (NOT like-for-like: width-only has no counterpart in router.py (shown against the true-flag router)) vs existing zero-target (true flag), LOCO
+  lambda  scored same  scored changed (task: existing->new)                                                             unscored       
+  ------  -----------  -----------------------------------------------------------------------------------------------  -------------  
+  0       5/11 same    1030: SA->MA; 1089: SA->MA; 1624: MA->SA; 1654: MA->SA; 1914: MA->SA; 1936: MA->SA               0/13 changed   
+  10      5/11 same    1030: SA->MA; 1089: SA->MA; 1624: MA->SA; 1654: MA->SA; 1914: MA->SA; 1936: MA->SA               0/13 changed   
+  100     4/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 1624: MA->SA; 1654: MA->SA; 1914: MA->SA; 1936: MA->SA  12/13 changed  
+  300     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 900001: MA->SA                                          12/13 changed  
+
+   width (NOT like-for-like: width-only has no counterpart in router.py (shown against the true-flag router)) vs existing zero-target (true flag), LOTO
+  lambda  scored same  scored changed (task: existing->new)                     unscored       
+  ------  -----------  -------------------------------------------------------  -------------  
+  0       7/11 same    1030: SA->MA; 1089: SA->MA; 1654: MA->SA; 1914: MA->SA   0/13 changed   
+  10      7/11 same    1030: SA->MA; 1089: SA->MA; 1654: MA->SA; 1914: MA->SA   0/13 changed   
+  100     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 1654: MA->SA    12/13 changed  
+  300     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 900001: MA->SA  12/13 changed  
+
+   width (NOT like-for-like: width-only has no counterpart in router.py (shown against the true-flag router)) vs existing pooled k=2 (true flag), LOCO
+  lambda  scored same  scored changed (task: existing->new)                                                                                     unscored       
+  ------  -----------  -----------------------------------------------------------------------------------------------------------------------  -------------  
+  0       3/11 same    36: MA->SA; 89: MA->SA; 1030: SA->MA; 1089: SA->MA; 1624: MA->SA; 1654: MA->SA; 1914: MA->SA; 1936: MA->SA               0/13 changed   
+  10      3/11 same    36: MA->SA; 89: MA->SA; 1030: SA->MA; 1089: SA->MA; 1624: MA->SA; 1654: MA->SA; 1914: MA->SA; 1936: MA->SA               0/13 changed   
+  100     2/11 same    36: MA->SA; 89: MA->SA; 722: SA->MA; 1030: SA->MA; 1089: SA->MA; 1624: MA->SA; 1654: MA->SA; 1914: MA->SA; 1936: MA->SA  12/13 changed  
+  300     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 900001: MA->SA                                                                  12/13 changed  
+
+   width (NOT like-for-like: width-only has no counterpart in router.py (shown against the true-flag router)) vs existing pooled k=2 (true flag), LOTO
+  lambda  scored same  scored changed (task: existing->new)                     unscored       
+  ------  -----------  -------------------------------------------------------  -------------  
+  0       7/11 same    1030: SA->MA; 1089: SA->MA; 1654: MA->SA; 1914: MA->SA   0/13 changed   
+  10      7/11 same    1030: SA->MA; 1089: SA->MA; 1654: MA->SA; 1914: MA->SA   0/13 changed   
+  100     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 1654: MA->SA    12/13 changed  
+  300     7/11 same    722: SA->MA; 1030: SA->MA; 1089: SA->MA; 900001: MA->SA  12/13 changed  
+
+################################################################################################################################
+5. BUCKET SPARSITY UNDER LEAVE-ONE-CATEGORY-OUT (training categories available for each scored task)
+################################################################################################################################
+  definition      empty (of 11)  n=1  n>=2  training categories per scored task                                                         
+  --------------  -------------  ---  ----  --------------------------------------------------------------------------------------------
+  width           2              2    7     36:0, 89:0, 722:14, 1030:14, 1089:14, 1624:14, 1654:14, 1914:14, 1936:14, 900001:1, 900002:1
+  width+depth     7              0    4     36:0, 89:0, 722:0, 1030:3, 1089:9, 1624:9, 1654:9, 1914:0, 1936:0, 900001:0, 900002:0       
+  width+priv_cat  2              6    3     36:0, 89:0, 722:12, 1030:12, 1089:12, 1624:1, 1654:1, 1914:1, 1936:1, 900001:1, 900002:1    
+  width+priv_llm  3              2    6     36:0, 89:0, 722:14, 1030:14, 1089:14, 1624:0, 1654:14, 1914:14, 1936:14, 900001:1, 900002:1 
+   (the n=1 case has no cost SE: cost is treated as fixed in the simulation and flagged)
+
+################################################################################################################################
+6. FINAL CHECKS
+################################################################################################################################
+   cross-validation folds fitted: width/LOCO=18, width/LOTO=24, width+depth/LOCO=18, width+depth/LOTO=24, width+priv_cat/LOCO=18, width+priv_cat/LOTO=24, width+priv_llm/LOCO=18, width+priv_llm/LOTO=24
+   held-out guard: every fold asserted no task of the held-out category (LOCO) / the held-out task (LOTO) was in training (assert passed).
+   protected files/dirs modified vs HEAD (router.py, oracle.py, structured_score.py, normalize_score.py, decomposition/): none
+   existing result dirs unchanged: True  {'custom_baseline': (72, '8a6d65ea9633a679a3c35c144bfc4ac4'), 'workflow': (72, '27423f7305a141751631013dc446147d'), 'multi_agent': (72, '0d214ce0131242b7e73436bb430477bd')}
+
+   final model fitted on all 24 tasks:
+  bucket  architecture  n   s      alpha  beta    mean   sd     exp. cost  cost SE
+  ------  ------------  --  -----  -----  ------  -----  -----  ---------  -------
+  (w1)    single_agent  15  1.333  2.333  14.667  0.137  0.081  $0.00229   0.00067
+  (w1)    workflow      15  0.682  1.682  15.318  0.099  0.070  $0.00259   0.00056
+  (w1)    multi_agent   15  1.177  2.177  14.823  0.128  0.079  $0.00204   0.00050
+  (w2)    single_agent  2   0.267  1.267  2.733   0.317  0.208  $0.00180   0.00034
+  (w2)    workflow      2   0.300  1.300  2.700   0.325  0.209  $0.00328   0.00060
+  (w2)    multi_agent   2   0.967  1.967  2.033   0.492  0.224  $0.00344   0.00085
+  (w4)    single_agent  1   0.500  1.500  1.500   0.500  0.250  $0.00093   None   
+  (w4)    workflow      1   0.000  1.000  2.000   0.333  0.236  $0.00588   None   
+  (w4)    multi_agent   1   0.000  1.000  2.000   0.333  0.236  $0.00468   None   
+
+bucket_model.json written last (after all evaluation outputs); fitted on 24 tasks.

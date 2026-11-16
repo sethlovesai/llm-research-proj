@@ -1,0 +1,380 @@
+[
+  {
+    "task_id": 36,
+    "run_number": 3,
+    "task_type": "lead_qualification",
+    "gt_answer": [
+      "Budget"
+    ],
+    "reward": 0,
+    "agent_info": {
+      "architecture": "workflow",
+      "execution_order": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "final_subtask_id": "6",
+      "end_reason": {
+        "source": "agent",
+        "message": "Workflow completed",
+        "content": "Budget, Authority, Need, Timeline",
+        "parsed_answer": [
+          "None"
+        ]
+      },
+      "usage": {
+        "cost": [
+          0.00035985,
+          0.000387,
+          0.0005424,
+          0.0004647,
+          0.0004866,
+          0.00047624999999999995,
+          0.0004925999999999999,
+          0.00049065,
+          7.049999999999999e-05,
+          6.149999999999999e-05,
+          6.39e-05,
+          6.51e-05,
+          6.33e-05
+        ],
+        "completion_tokens": [
+          71,
+          74,
+          104,
+          64,
+          97,
+          59,
+          84,
+          60,
+          31,
+          16,
+          20,
+          22,
+          7
+        ],
+        "prompt_tokens": [
+          4163,
+          4332,
+          5376,
+          5530,
+          5608,
+          5755,
+          5828,
+          5975,
+          346,
+          346,
+          346,
+          346,
+          394
+        ],
+        "total_tokens": [
+          4234,
+          4406,
+          5480,
+          5594,
+          5705,
+          5814,
+          5912,
+          6035,
+          377,
+          362,
+          366,
+          368,
+          401
+        ]
+      },
+      "total_cost": 0.0040243499999999995,
+      "num_subtasks": 6
+    },
+    "traj": [
+      {
+        "subtask_id": "1",
+        "role": "Retriever",
+        "description": "Retrieve the lead's record including notes and activity history related to recent discussions.",
+        "depends_on": [],
+        "context_received": "",
+        "output": "Error: Retriever subtask 1 did not produce a <respond> within 8 turns.",
+        "turns": [
+          {
+            "turn": 1,
+            "assistant": "<thought> I need to retrieve the lead's record and relevant activity history related to recent discussions, including notes and voice call transcripts. </thought> \n<execute> SELECT Id, FirstName, LastName, Email, Phone, CreatedDate, IsConverted FROM Lead WHERE Id = '00QWs00000GLEwQMAX' </execute>",
+            "action": {
+              "name": "execute",
+              "content": "SELECT Id, FirstName, LastName, Email, Phone, CreatedDate, IsConverted FROM Lead WHERE Id = '00QWs00000GLEwQMAX'"
+            },
+            "observation": "[{'Id': '00QWs00000GLEwQMAX', 'FirstName': 'Elena', 'LastName': 'Petrova', 'Email': 'elena.petrova@luxauto.com', 'Phone': '333-555-1584', 'CreatedDate': '2023-08-01T10:30:00.000+0000', 'IsConverted': False}]"
+          },
+          {
+            "turn": 2,
+            "assistant": "<thought> I have retrieved the lead's record. Now I need to find the voice call transcripts related to this lead to gather more information on recent discussions. </thought> \n<execute> SELECT Id, Body__c, CreatedDate FROM VoiceCallTranscript__c WHERE LeadId__c = '00QWs00000GLEwQMAX' </execute>",
+            "action": {
+              "name": "execute",
+              "content": "SELECT Id, Body__c, CreatedDate FROM VoiceCallTranscript__c WHERE LeadId__c = '00QWs00000GLEwQMAX'"
+            },
+            "observation": "[{'Id': 'a05Ws000005Ts8bIAC', 'Body__c': \"[2023-10-30T10:00:00] Emily Jackson: Hi, Elena! This is Emily Jackson from EuroCars Auto Sales. How are you doing today?\\n[2023-10-30T10:00:05] Elena Petrova: Hi, Emily! I'm doing well, thank you. Just enjoyed a nice cup of coffee. How about yourself?\\n[2023-10-30T10:00:15] Emily Jackson: I'm doing great, thanks! Coffee sounds wonderful. I wanted to touch base regarding your interest in our lineup, especially the 2022 Audi A6 and the 2023 Mercedes-Benz E-Class that you inquired about. Do you have some time now to discuss?\\n[2023-10-30T10:00:28] Elena Petrova: Absolutely! I've been looking forward to learning more about them.\\n[2023-10-30T10:00:40] Emily Jackson: Great! Both vehicles are excellent choices. Starting with the 2022 Audi A6, it's known for its sleek design and advanced technology features. You\u2019ll find it offers an optimum balance between luxury and performance. How does that align with what you're looking for?\\n[2023-10-30T10:00:55] Elena Petrova: That sounds exactly like what I'm after. I love the idea of having technology complement the driving experience.\\n[2023-10-30T10:01:10] Emily Jackson: Perfect. Now, as for the 2023 Mercedes-Benz E-Class, it continues to be one of the top performers in its segment. It's loaded with cutting-edge safety features and offers a comfortable and luxurious ride. Both are solid investments. Do either of these fit your expectations?\\n[2023-10-30T10:01:25] Elena Petrova: They both do, really. My main concern is fitting everything within my budget of $97,715. I also need the installations done in 4 days. Is this feasible?\\n[2023-10-30T10:01:45] Emily Jackson: Absolutely, we can work with that timeline. We often arrange quick and efficient installations tailored to our clients' needs. Regarding the budget, the Audi A6 is priced at $55,000, and the E-Class starts around $70,000. I noticed you\u2019re interested in two Winter Protection Packages as well; they're $500 each.\\n[2023-10-30T10:02:05] Elena Petrova: Okay, that's within reach, but just a bit tight. Are there any financing options or discounts we should consider?\\n[2023-10-30T10:02:30] Emily Jackson: We do have financing plans that can offer a bit more flexibility on payments. Additionally, we're running a promotion this month that could qualify you for some discounts across our winter packages if you decide to proceed with the purchase soon. Let me check those figures for you now.\\n[2023-10-30T10:02:45] Elena Petrova: That sounds great! Knowing I'm getting a deal would definitely help make the decision easier.\\n[2023-10-30T10:02:55] Emily Jackson: Certainly. Could you remind me if you have a top preference between the two vehicles?\\n[2023-10-30T10:03:05] Elena Petrova: I'm leaning a bit more towards the Audi, primarily due to a friend's recommendation.\\n[2023-10-30T10:03:20] Emily Jackson: The Audi is indeed a fantastic choice. Let\u2019s set up a test drive so you can experience it firsthand before finalizing anything. We can also go over the financing and potential savings during your visit. Does that work for you?\\n[2023-10-30T10:03:35] Elena Petrova: Yes, that sounds perfect. I\u2019m looking forward to it. Thank you, Emily!\\n[2023-10-30T10:03:45] Emily Jackson: You're welcome, Elena. I\u2019ll send you some details by email shortly and will follow up to ensure everything is clear. Thank you for your time today. Have a great rest of your day!\\n[2023-10-30T10:03:55] Elena Petrova: Thanks, Emily. You too! Bye for now.\", 'CreatedDate': '2023-10-30T10:00:00.000+0000'}]"
+          },
+          {
+            "turn": 3,
+            "assistant": "<thought> I have retrieved the voice call transcript related to the lead. Now I need to analyze it for any potential notes or factors that could indicate the lead's qualification status. </thought> \n<execute> SELECT Id, Description FROM Task WHERE WhatId IN (SELECT Id FROM Opportunity WHERE ContactId IN (SELECT Id FROM Contact WHERE AccountId IN (SELECT Id FROM Account WHERE Id IN (SELECT ConvertedAccountId FROM Lead WHERE Id = '00QWs00000GLEwQMAX'))))) </execute>",
+            "action": {
+              "name": "execute",
+              "content": "SELECT Id, Description FROM Task WHERE WhatId IN (SELECT Id FROM Opportunity WHERE ContactId IN (SELECT Id FROM Contact WHERE AccountId IN (SELECT Id FROM Account WHERE Id IN (SELECT ConvertedAccountId FROM Lead WHERE Id = '00QWs00000GLEwQMAX')))))"
+            },
+            "observation": "MALFORMED_QUERY: \nWHERE Id = '00QWs00000GLEwQMAX')))))\n                                  ^\nERROR at Row:1:Column:247\nunexpected token: ')'"
+          },
+          {
+            "turn": 4,
+            "assistant": "<thought> The previous query was malformed. I will try to retrieve the task records directly associated with the lead instead. </thought> \n<execute> SELECT Id, Description FROM Task WHERE WhatId IN (SELECT Id FROM Opportunity WHERE ContactId = '00QWs00000GLEwQMAX') </execute>",
+            "action": {
+              "name": "execute",
+              "content": "SELECT Id, Description FROM Task WHERE WhatId IN (SELECT Id FROM Opportunity WHERE ContactId = '00QWs00000GLEwQMAX')"
+            },
+            "observation": "[]"
+          },
+          {
+            "turn": 5,
+            "assistant": "<thought> I did not find any task records related to the lead. I will now search for any email messages associated with the lead to gather additional information. </thought> \n<execute> SELECT Id, Subject, TextBody FROM EmailMessage WHERE RelatedToId IN (SELECT Id FROM Opportunity WHERE ContactId IN (SELECT Id FROM Contact WHERE AccountId IN (SELECT ConvertedAccountId FROM Lead WHERE Id = '00QWs00000GLEwQMAX')))) </execute>",
+            "action": {
+              "name": "execute",
+              "content": "SELECT Id, Subject, TextBody FROM EmailMessage WHERE RelatedToId IN (SELECT Id FROM Opportunity WHERE ContactId IN (SELECT Id FROM Contact WHERE AccountId IN (SELECT ConvertedAccountId FROM Lead WHERE Id = '00QWs00000GLEwQMAX'))))"
+            },
+            "observation": "MALFORMED_QUERY: \nWHERE Id = '00QWs00000GLEwQMAX'))))\n                                 ^\nERROR at Row:1:Column:229\nunexpected token: ')'"
+          },
+          {
+            "turn": 6,
+            "assistant": "<thought> The previous query was also malformed. I will retrieve the email messages directly associated with the lead instead. </thought> \n<execute> SELECT Id, Subject, TextBody FROM EmailMessage WHERE RelatedToId = '00QWs00000GLEwQMAX' </execute>",
+            "action": {
+              "name": "execute",
+              "content": "SELECT Id, Subject, TextBody FROM EmailMessage WHERE RelatedToId = '00QWs00000GLEwQMAX'"
+            },
+            "observation": "[]"
+          },
+          {
+            "turn": 7,
+            "assistant": "<thought> I have not found any email messages related to the lead either. I will now check for any cases associated with the lead to gather further information. </thought> \n<execute> SELECT Id, Subject, Description FROM Case WHERE ContactId IN (SELECT Id FROM Contact WHERE AccountId IN (SELECT ConvertedAccountId FROM Lead WHERE Id = '00QWs00000GLEwQMAX')) </execute>",
+            "action": {
+              "name": "execute",
+              "content": "SELECT Id, Subject, Description FROM Case WHERE ContactId IN (SELECT Id FROM Contact WHERE AccountId IN (SELECT ConvertedAccountId FROM Lead WHERE Id = '00QWs00000GLEwQMAX'))"
+            },
+            "observation": "MALFORMED_QUERY: \n(SELECT ConvertedAccountId FROM Lead WHERE Id = '00QWs00000GLEwQMAX'))\n                                ^\nERROR at Row:1:Column:137\nNesting of semi join sub-selects is not supported"
+          },
+          {
+            "turn": 8,
+            "assistant": "<thought> The previous query was malformed due to nesting issues. I will retrieve cases directly associated with the lead without sub-selects. </thought> \n<execute> SELECT Id, Subject, Description FROM Case WHERE ContactId = '00QWs00000GLEwQMAX' </execute>",
+            "action": {
+              "name": "execute",
+              "content": "SELECT Id, Subject, Description FROM Case WHERE ContactId = '00QWs00000GLEwQMAX'"
+            },
+            "observation": "[]"
+          }
+        ],
+        "usage": {
+          "cost": [
+            0.00035985,
+            0.000387,
+            0.0005424,
+            0.0004647,
+            0.0004866,
+            0.00047624999999999995,
+            0.0004925999999999999,
+            0.00049065
+          ],
+          "completion_tokens": [
+            71,
+            74,
+            104,
+            64,
+            97,
+            59,
+            84,
+            60
+          ],
+          "prompt_tokens": [
+            4163,
+            4332,
+            5376,
+            5530,
+            5608,
+            5755,
+            5828,
+            5975
+          ],
+          "total_tokens": [
+            4234,
+            4406,
+            5480,
+            5594,
+            5705,
+            5814,
+            5912,
+            6035
+          ]
+        },
+        "wall_time_sec": 14.778
+      },
+      {
+        "subtask_id": "2",
+        "role": "Analyst",
+        "description": "Check Need based on the lead's recent discussions.",
+        "depends_on": [
+          "1"
+        ],
+        "context_received": "# Context from prior subtasks\n\n--- Output of Subtask 1 (Retriever): Retrieve the lead's record including notes and activity history related to recent discussions. ---\nError: Retriever subtask 1 did not produce a <respond> within 8 turns.",
+        "output": "No, not satisfied: There is no evidence from the lead's recent discussions to assess their Need, as the retrieval subtask did not produce any data.",
+        "turns": [
+          {
+            "prompt": "You are an Analyst in a CRM task pipeline. You reason, compute, or judge over data that other subtasks have already retrieved -- you have no tools and no direct access to the CRM system, only the context given to you below.\n\n# Overall task\nShould this lead be considered qualified based on their recent discussions? If not, identify which factors among 'Budget', 'Authority', 'Need', or 'Timeline' contributed to this decision. Return only one or several of the four BANT factors that the lead qualification fails to meet (i.e. 'Budget', 'Authority', 'Need', 'Timeline').\n\n# Your subtask\nCheck Need based on the lead's recent discussions.\n\n# Context from prior subtasks\n\n--- Output of Subtask 1 (Retriever): Retrieve the lead's record including notes and activity history related to recent discussions. ---\nError: Retriever subtask 1 did not produce a <respond> within 8 turns.\n\nCarry out your subtask using only the context above. Your response must be an explicit judgment. State clearly whether the evidence satisfies what you were asked to check (e.g. 'Yes, satisfied: [brief reason]' or 'No, not satisfied: [brief reason]'), \\ \nnot just a restatement of what you were asked to check. Respond with only the result of your analysis, precise and concise, in a form usable by whatever subtask consumes it next. Do not add explanation beyond what your subtask asks for.\nIf the context shows no data was found, or the retrieval failed, state that explicitly rather than guessing \\ \n, this is a valid, informative answer, not a failure to complete your subtask.",
+            "response": "No, not satisfied: There is no evidence from the lead's recent discussions to assess their Need, as the retrieval subtask did not produce any data."
+          }
+        ],
+        "usage": {
+          "cost": [
+            7.049999999999999e-05
+          ],
+          "completion_tokens": [
+            31
+          ],
+          "prompt_tokens": [
+            346
+          ],
+          "total_tokens": [
+            377
+          ]
+        },
+        "wall_time_sec": 0.791
+      },
+      {
+        "subtask_id": "3",
+        "role": "Analyst",
+        "description": "Check Budget based on the lead's recent discussions.",
+        "depends_on": [
+          "1"
+        ],
+        "context_received": "# Context from prior subtasks\n\n--- Output of Subtask 1 (Retriever): Retrieve the lead's record including notes and activity history related to recent discussions. ---\nError: Retriever subtask 1 did not produce a <respond> within 8 turns.",
+        "output": "No, not satisfied: No data was retrieved to assess the lead's budget.",
+        "turns": [
+          {
+            "prompt": "You are an Analyst in a CRM task pipeline. You reason, compute, or judge over data that other subtasks have already retrieved -- you have no tools and no direct access to the CRM system, only the context given to you below.\n\n# Overall task\nShould this lead be considered qualified based on their recent discussions? If not, identify which factors among 'Budget', 'Authority', 'Need', or 'Timeline' contributed to this decision. Return only one or several of the four BANT factors that the lead qualification fails to meet (i.e. 'Budget', 'Authority', 'Need', 'Timeline').\n\n# Your subtask\nCheck Budget based on the lead's recent discussions.\n\n# Context from prior subtasks\n\n--- Output of Subtask 1 (Retriever): Retrieve the lead's record including notes and activity history related to recent discussions. ---\nError: Retriever subtask 1 did not produce a <respond> within 8 turns.\n\nCarry out your subtask using only the context above. Your response must be an explicit judgment. State clearly whether the evidence satisfies what you were asked to check (e.g. 'Yes, satisfied: [brief reason]' or 'No, not satisfied: [brief reason]'), \\ \nnot just a restatement of what you were asked to check. Respond with only the result of your analysis, precise and concise, in a form usable by whatever subtask consumes it next. Do not add explanation beyond what your subtask asks for.\nIf the context shows no data was found, or the retrieval failed, state that explicitly rather than guessing \\ \n, this is a valid, informative answer, not a failure to complete your subtask.",
+            "response": "No, not satisfied: No data was retrieved to assess the lead's budget."
+          }
+        ],
+        "usage": {
+          "cost": [
+            6.149999999999999e-05
+          ],
+          "completion_tokens": [
+            16
+          ],
+          "prompt_tokens": [
+            346
+          ],
+          "total_tokens": [
+            362
+          ]
+        },
+        "wall_time_sec": 0.616
+      },
+      {
+        "subtask_id": "4",
+        "role": "Analyst",
+        "description": "Check Authority based on the lead's recent discussions.",
+        "depends_on": [
+          "1"
+        ],
+        "context_received": "# Context from prior subtasks\n\n--- Output of Subtask 1 (Retriever): Retrieve the lead's record including notes and activity history related to recent discussions. ---\nError: Retriever subtask 1 did not produce a <respond> within 8 turns.",
+        "output": "No, not satisfied: There is no retrieved data regarding the lead's discussions to assess their authority.",
+        "turns": [
+          {
+            "prompt": "You are an Analyst in a CRM task pipeline. You reason, compute, or judge over data that other subtasks have already retrieved -- you have no tools and no direct access to the CRM system, only the context given to you below.\n\n# Overall task\nShould this lead be considered qualified based on their recent discussions? If not, identify which factors among 'Budget', 'Authority', 'Need', or 'Timeline' contributed to this decision. Return only one or several of the four BANT factors that the lead qualification fails to meet (i.e. 'Budget', 'Authority', 'Need', 'Timeline').\n\n# Your subtask\nCheck Authority based on the lead's recent discussions.\n\n# Context from prior subtasks\n\n--- Output of Subtask 1 (Retriever): Retrieve the lead's record including notes and activity history related to recent discussions. ---\nError: Retriever subtask 1 did not produce a <respond> within 8 turns.\n\nCarry out your subtask using only the context above. Your response must be an explicit judgment. State clearly whether the evidence satisfies what you were asked to check (e.g. 'Yes, satisfied: [brief reason]' or 'No, not satisfied: [brief reason]'), \\ \nnot just a restatement of what you were asked to check. Respond with only the result of your analysis, precise and concise, in a form usable by whatever subtask consumes it next. Do not add explanation beyond what your subtask asks for.\nIf the context shows no data was found, or the retrieval failed, state that explicitly rather than guessing \\ \n, this is a valid, informative answer, not a failure to complete your subtask.",
+            "response": "No, not satisfied: There is no retrieved data regarding the lead's discussions to assess their authority."
+          }
+        ],
+        "usage": {
+          "cost": [
+            6.39e-05
+          ],
+          "completion_tokens": [
+            20
+          ],
+          "prompt_tokens": [
+            346
+          ],
+          "total_tokens": [
+            366
+          ]
+        },
+        "wall_time_sec": 0.804
+      },
+      {
+        "subtask_id": "5",
+        "role": "Analyst",
+        "description": "Check Timeline based on the lead's recent discussions.",
+        "depends_on": [
+          "1"
+        ],
+        "context_received": "# Context from prior subtasks\n\n--- Output of Subtask 1 (Retriever): Retrieve the lead's record including notes and activity history related to recent discussions. ---\nError: Retriever subtask 1 did not produce a <respond> within 8 turns.",
+        "output": "No, not satisfied: There is no data available regarding the lead's recent discussions to assess the Timeline factor.",
+        "turns": [
+          {
+            "prompt": "You are an Analyst in a CRM task pipeline. You reason, compute, or judge over data that other subtasks have already retrieved -- you have no tools and no direct access to the CRM system, only the context given to you below.\n\n# Overall task\nShould this lead be considered qualified based on their recent discussions? If not, identify which factors among 'Budget', 'Authority', 'Need', or 'Timeline' contributed to this decision. Return only one or several of the four BANT factors that the lead qualification fails to meet (i.e. 'Budget', 'Authority', 'Need', 'Timeline').\n\n# Your subtask\nCheck Timeline based on the lead's recent discussions.\n\n# Context from prior subtasks\n\n--- Output of Subtask 1 (Retriever): Retrieve the lead's record including notes and activity history related to recent discussions. ---\nError: Retriever subtask 1 did not produce a <respond> within 8 turns.\n\nCarry out your subtask using only the context above. Your response must be an explicit judgment. State clearly whether the evidence satisfies what you were asked to check (e.g. 'Yes, satisfied: [brief reason]' or 'No, not satisfied: [brief reason]'), \\ \nnot just a restatement of what you were asked to check. Respond with only the result of your analysis, precise and concise, in a form usable by whatever subtask consumes it next. Do not add explanation beyond what your subtask asks for.\nIf the context shows no data was found, or the retrieval failed, state that explicitly rather than guessing \\ \n, this is a valid, informative answer, not a failure to complete your subtask.",
+            "response": "No, not satisfied: There is no data available regarding the lead's recent discussions to assess the Timeline factor."
+          }
+        ],
+        "usage": {
+          "cost": [
+            6.51e-05
+          ],
+          "completion_tokens": [
+            22
+          ],
+          "prompt_tokens": [
+            346
+          ],
+          "total_tokens": [
+            368
+          ]
+        },
+        "wall_time_sec": 0.828
+      },
+      {
+        "subtask_id": "6",
+        "role": "Responder",
+        "description": "Synthesize the results of the BANT checks and identify which factors contributed to the qualification failure.",
+        "depends_on": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "context_received": "# Context from prior subtasks\n\n--- Output of Subtask 2 (Analyst): Check Need based on the lead's recent discussions. ---\nNo, not satisfied: There is no evidence from the lead's recent discussions to assess their Need, as the retrieval subtask did not produce any data.\n\n--- Output of Subtask 3 (Analyst): Check Budget based on the lead's recent discussions. ---\nNo, not satisfied: No data was retrieved to assess the lead's budget.\n\n--- Output of Subtask 4 (Analyst): Check Authority based on the lead's recent discussions. ---\nNo, not satisfied: There is no retrieved data regarding the lead's discussions to assess their authority.\n\n--- Output of Subtask 5 (Analyst): Check Timeline based on the lead's recent discussions. ---\nNo, not satisfied: There is no data available regarding the lead's recent discussions to assess the Timeline factor.",
+        "output": "Budget, Authority, Need, Timeline",
+        "turns": [
+          {
+            "prompt": "You are the Responder in a CRM task pipeline -- the final step. You have no tools and no direct access to the CRM system; you only have the context below.\n\n# Overall task (this is the query the final answer must satisfy)\nShould this lead be considered qualified based on their recent discussions? If not, identify which factors among 'Budget', 'Authority', 'Need', or 'Timeline' contributed to this decision. Return only one or several of the four BANT factors that the lead qualification fails to meet (i.e. 'Budget', 'Authority', 'Need', 'Timeline').\n\n# Your subtask\nSynthesize the results of the BANT checks and identify which factors contributed to the qualification failure.\n\n# Context from prior subtasks\n\n--- Output of Subtask 2 (Analyst): Check Need based on the lead's recent discussions. ---\nNo, not satisfied: There is no evidence from the lead's recent discussions to assess their Need, as the retrieval subtask did not produce any data.\n\n--- Output of Subtask 3 (Analyst): Check Budget based on the lead's recent discussions. ---\nNo, not satisfied: No data was retrieved to assess the lead's budget.\n\n--- Output of Subtask 4 (Analyst): Check Authority based on the lead's recent discussions. ---\nNo, not satisfied: There is no retrieved data regarding the lead's discussions to assess their authority.\n\n--- Output of Subtask 5 (Analyst): Check Timeline based on the lead's recent discussions. ---\nNo, not satisfied: There is no data available regarding the lead's recent discussions to assess the Timeline factor.\n\nUsing only the context above, produce the final answer to the overall task. Respond with ONLY the final answer, formatted exactly as the overall task requests (e.g. an Id, a bare list of values, a short phrase) -- no explanation, no preamble, no extra text.",
+            "response": "Budget, Authority, Need, Timeline"
+          }
+        ],
+        "usage": {
+          "cost": [
+            6.33e-05
+          ],
+          "completion_tokens": [
+            7
+          ],
+          "prompt_tokens": [
+            394
+          ],
+          "total_tokens": [
+            401
+          ]
+        },
+        "wall_time_sec": 0.748
+      }
+    ]
+  }
+]

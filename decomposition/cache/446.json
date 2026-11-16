@@ -1,0 +1,45 @@
+{
+  "task_id": 446,
+  "query": "In the last six months, which subtopic in all sales conversations is mentioned most positively when discussing our solutions?",
+  "category": "sales_insight_mining",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve all sales conversation records from the last six months that mention our solutions.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Analyze the retrieved conversations to identify and categorize mentions of subtopics related to our solutions.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Evaluate the sentiment of each subtopic mention to determine which is mentioned most positively.",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "4",
+      "description": "Format the final answer to indicate the most positively mentioned subtopic.",
+      "depends_on": [
+        "3"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 4,
+    "coupling_density": 0.5
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

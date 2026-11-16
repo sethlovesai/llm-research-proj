@@ -1,0 +1,37 @@
+{
+  "task_id": 1857,
+  "query": "Does this quote's price and configuration comply with the company policy? If it doesn't, what knowledge article does it contravene? Return only the Id of the knowledge article that the quote violates. If no violation is found, return None.",
+  "category": "quote_approval",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve the quote's price, configuration, and any other policy-relevant fields",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Determine whether the retrieved quote complies with company policy, and if not, identify the violated knowledge article",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Format the final response (article Id or None)",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 3,
+    "coupling_density": 0.6667
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

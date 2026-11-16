@@ -1,0 +1,60 @@
+{
+  "task_id": 900001,
+  "query": "Assess this account's churn risk by reviewing their support case history and order/purchase trend, then recommend whether retention action is needed.",
+  "category": "churn_risk_assessment",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve the account's support case history, including case status and resolution dates.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Retrieve the account's order/purchase trend data, including order dates and amounts.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "3",
+      "description": "Analyze the support case history to assess the frequency and severity of issues reported by the account.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "4",
+      "description": "Analyze the order/purchase trend to identify any declines in purchasing behavior over time.",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "5",
+      "description": "Determine the overall churn risk based on the analyses of support case history and order trends, and recommend retention actions if necessary.",
+      "depends_on": [
+        "3",
+        "4"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "6",
+      "description": "Format the final recommendation regarding retention actions needed for the account.",
+      "depends_on": [
+        "5"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 2,
+    "critical_path_depth": 4,
+    "coupling_density": 0.3333
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

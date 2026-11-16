@@ -1,0 +1,45 @@
+{
+  "task_id": 792,
+  "query": "Which agent experienced the greatest sales amount in sales amount over the last two quarters? Return only the Id of the agent. ",
+  "category": "sales_amount_understanding",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve sales records for all agents over the last two quarters",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Calculate total sales amount for each agent",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Identify the agent with the greatest sales amount",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "4",
+      "description": "Format the final response with the agent's Id",
+      "depends_on": [
+        "3"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 4,
+    "coupling_density": 0.5
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

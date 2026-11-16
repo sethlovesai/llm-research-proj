@@ -1,0 +1,37 @@
+{
+  "task_id": 1089,
+  "query": "During the summer of 2021, in which states were cases resolved the quickest? Return only the two-letter abbreviation of the most matching state (eg. CA).",
+  "category": "best_region_identification",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve case resolution data for all states during the summer of 2021",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Analyze the retrieved data to determine which states had the quickest case resolutions",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Identify the state with the quickest case resolution and format the response",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 3,
+    "coupling_density": 0.6667
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

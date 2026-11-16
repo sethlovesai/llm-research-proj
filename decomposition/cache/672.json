@@ -1,0 +1,37 @@
+{
+  "task_id": 672,
+  "query": "Is the arrangement of the product details like quantity and price in this quote against company policy? Return only the Id of the knowledge article that the invalid config violates. ",
+  "category": "invalid_config",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve the quote's quantity, price, and any other policy-relevant fields",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Determine whether the retrieved quote configuration complies with company policy, and if not, identify the violated knowledge article",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Format the final response with the article Id or None",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 3,
+    "coupling_density": 0.6667
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

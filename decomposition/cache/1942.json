@@ -1,0 +1,37 @@
+{
+  "task_id": 1942,
+  "query": "Can you display the vehicle protection warranty that I purchased a fortnight ago? Return only the Id of the product from the contact's relevant past transaction.",
+  "category": "named_entity_disambiguation",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve the contact's relevant past transaction records to find the vehicle protection warranty details.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Extract and return the Id of the vehicle protection warranty product from the retrieved transaction records.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Format the final response with the warranty product Id.",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 3,
+    "coupling_density": 0.6667
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

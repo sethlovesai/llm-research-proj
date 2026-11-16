@@ -1,0 +1,64 @@
+{
+  "task_id": 36,
+  "query": "Should this lead be considered qualified based on their recent discussions? If not, identify which factors among 'Budget', 'Authority', 'Need', or 'Timeline' contributed to this decision. Return only one or several of the four BANT factors that the lead qualification fails to meet (i.e. 'Budget', 'Authority', 'Need', 'Timeline').",
+  "category": "lead_qualification",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve the lead's record including notes and activity history related to recent discussions.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Check Need based on the lead's recent discussions.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Check Budget based on the lead's recent discussions.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "4",
+      "description": "Check Authority based on the lead's recent discussions.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "5",
+      "description": "Check Timeline based on the lead's recent discussions.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "6",
+      "description": "Synthesize the results of the BANT checks and identify which factors contributed to the qualification failure.",
+      "depends_on": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 4,
+    "critical_path_depth": 3,
+    "coupling_density": 0.5333
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

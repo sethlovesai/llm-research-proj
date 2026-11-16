@@ -1,0 +1,37 @@
+{
+  "task_id": 1563,
+  "query": "Use the case routing policy to determine the most suitable agent for the given case. Return only the Id of the agent.\n## Given Case\n- Case Subject: Clarification Needed on Extended Warranty Terms\n- Case Description: I recently purchased a 2021 Volvo XC60 and opted for an extended warranty. However, I'm confused about the specific terms and conditions of this warranty. Could someone please explain what is covered and for how long?",
+  "category": "case_routing",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve the case routing policy to identify suitable agents based on case subject and description.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Analyze the retrieved policy to determine the most suitable agent for the case.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Return the ID of the most suitable agent.",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 3,
+    "coupling_density": 0.6667
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

@@ -1,0 +1,45 @@
+{
+  "task_id": 2056,
+  "query": "Determine which agent had the lowest average time to close opportunities over the last three quarters. Return only the Id of the agent.",
+  "category": "sales_cycle_understanding",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve opportunity records for all agents over the last three quarters, including open and close dates.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Compute average time to close opportunities for each agent based on the retrieved records.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Identify the agent with the lowest average time to close opportunities.",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "4",
+      "description": "Format the final response to return only the Id of the agent with the lowest average time.",
+      "depends_on": [
+        "3"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 4,
+    "coupling_density": 0.5
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

@@ -1,0 +1,37 @@
+{
+  "task_id": 348,
+  "query": "What has been the most frequent problem encountered by Flexible Financing Solutions in the past four months? The associated product Id is 01tWs000006f7i1IAA. Return only the issue Id of the most reported issue for this product.",
+  "category": "top_issue_identification",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve all reported issues associated with product Id 01tWs000006f7i1IAA from the last four months.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Analyze the retrieved issues to determine the most frequently reported problem.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Return the issue Id of the most reported issue.",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 3,
+    "coupling_density": 0.6667
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

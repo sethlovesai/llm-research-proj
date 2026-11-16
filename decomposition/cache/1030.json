@@ -1,0 +1,45 @@
+{
+  "task_id": 1030,
+  "query": "Which agent achieved the highest lead conversion rate in the last four weeks? Return only the Id of the agent.",
+  "category": "conversion_rate_comprehension",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve lead conversion data for all agents over the last four weeks",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Calculate the conversion rate for each agent based on the retrieved data",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Identify the agent with the highest conversion rate",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "4",
+      "description": "Format the final response to return only the Id of the agent",
+      "depends_on": [
+        "3"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 4,
+    "coupling_density": 0.5
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

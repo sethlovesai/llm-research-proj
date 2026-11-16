@@ -1,0 +1,37 @@
+{
+  "task_id": 125,
+  "query": "Is there a specific month where the number of cases received for the 2022 BMW X5 M significantly exceeds those in other months within the last eight months? The associated product Id is 01tWs000006f6veIAA. Return only the month name.",
+  "category": "monthly_trend_analysis",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve the number of cases received for the 2022 BMW X5 M for each month over the last eight months.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Analyze the retrieved data to identify if there is a specific month where the number of cases significantly exceeds those in other months.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Format the final response to return only the month name.",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 3,
+    "coupling_density": 0.6667
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}

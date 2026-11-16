@@ -1,0 +1,37 @@
+{
+  "task_id": 122,
+  "query": "Is there any month in the last three quarters where the number of AutoElite Comprehensive Maintenance Plan cases was significantly higher than in other months? The associated product Id is 01tWs000006f7enIAA. Return only the month name.",
+  "category": "monthly_trend_analysis",
+  "decomposition_warranted": true,
+  "subtasks": [
+    {
+      "id": "1",
+      "description": "Retrieve the number of AutoElite Comprehensive Maintenance Plan cases for each month in the last three quarters for product Id 01tWs000006f7enIAA.",
+      "depends_on": [],
+      "role": "Retriever"
+    },
+    {
+      "id": "2",
+      "description": "Analyze the monthly case numbers to identify any month with significantly higher cases compared to others.",
+      "depends_on": [
+        "1"
+      ],
+      "role": "Analyst"
+    },
+    {
+      "id": "3",
+      "description": "Format the final response to return only the month name with significantly higher cases.",
+      "depends_on": [
+        "2"
+      ],
+      "role": "Responder"
+    }
+  ],
+  "features": {
+    "parallelism_width": 1,
+    "critical_path_depth": 3,
+    "coupling_density": 0.6667
+  },
+  "privacy_category": false,
+  "llm_omitted_refusal_check": false
+}
